@@ -47,7 +47,27 @@
 	const shine =
 		"before:content-[''] before:absolute before:inset-y-0 before:-left-1/4 before:w-1/4 before:transition-transform before:duration-500 before:ease-out group-hover:before:translate-x-[520%]";
 
-	const shapes: Record<string, string> = {
+	/*
+	 * The shape span is inset-y-0 (full height) but NOT flush left/right —
+	 * it overshoots the parent horizontally on both sides by height/2 *
+	 * tan(10deg), one per size (heights are fixed per size: sm 36px, md
+	 * 48px, lg 60px). Without this, a plain inset-0 span skews around its
+	 * own center, and since skewX shifts the top edge one way and the
+	 * bottom edge the other, two OPPOSITE corners end up receding inside
+	 * the parent's rectangular bounds instead of reaching its edge — which
+	 * exposed the page background through a small triangular gap at those
+	 * corners (only ever noticed once a button had a glow to highlight the
+	 * gap against, but it's present on every button this shape is used on).
+	 * Overshooting by that same amount on both sides means even the
+	 * receding edge still reaches at least as far as the original corner.
+	 */
+	const shapeOverscan: Record<string, string> = {
+		sm: '-left-[3.2px] -right-[3.2px]',
+		md: '-left-[4.25px] -right-[4.25px]',
+		lg: '-left-[5.3px] -right-[5.3px]'
+	};
+
+	const shapeBase: Record<string, string> = {
 		// Invert punch (fill flips yellow -> ink) plus the same diagonal shine
 		// sweep used on outline — the shine reads as a light streak against
 		// the now-dark hover fill instead of the paper-tinted streak it used
@@ -57,10 +77,14 @@
 		// confirmed by a side-by-side pixel-level render comparison, and
 		// matches the 2px weight already used for the other skewed cards'
 		// border-t/border-b.
-		primary: `absolute inset-0 shape-lean isolate overflow-hidden border-2 border-primary bg-primary transition-colors duration-200 group-hover:bg-ink ${shine} before:bg-primary/25`,
-		outline: `absolute inset-0 shape-lean isolate overflow-hidden border-2 border-secondary-line transition-colors duration-200 group-hover:border-primary ${shine} before:bg-primary/25`,
+		primary: `shape-lean isolate overflow-hidden border-2 border-primary bg-primary transition-colors duration-200 group-hover:bg-ink ${shine} before:bg-primary/25`,
+		outline: `shape-lean isolate overflow-hidden border-2 border-secondary-line transition-colors duration-200 group-hover:border-primary ${shine} before:bg-primary/25`,
 		ghost: ''
 	};
+
+	let shapeClasses = $derived(
+		variant === 'ghost' ? '' : `absolute inset-y-0 ${shapeOverscan[size]} ${shapeBase[variant]}`
+	);
 
 	const textColors: Record<string, string> = {
 		primary: 'text-ink transition-colors duration-200 group-hover:text-primary',
@@ -96,12 +120,12 @@
 
 {#if href}
 	<a href={resolvedHref} {target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} class={classes}>
-		{#if variant !== 'ghost'}<span class={shapes[variant]} aria-hidden="true"></span>{/if}
+		{#if variant !== 'ghost'}<span class={shapeClasses} aria-hidden="true"></span>{/if}
 		<span class="relative z-10 {textColors[variant]}">{@render children()}</span>
 	</a>
 {:else}
 	<button {type} {disabled} {onclick} class={classes}>
-		{#if variant !== 'ghost'}<span class={shapes[variant]} aria-hidden="true"></span>{/if}
+		{#if variant !== 'ghost'}<span class={shapeClasses} aria-hidden="true"></span>{/if}
 		<span class="relative z-10 {textColors[variant]}">{@render children()}</span>
 	</button>
 {/if}

@@ -84,6 +84,13 @@
 					</Button>
 				</div>
 			{/if}
+			{#if showSecondaryCtas}
+				<div transition:fade={{ duration: 200 }}>
+					<Button href="/schedule" variant="primary" size="sm">
+						{dict.nav.bookClasses}
+					</Button>
+				</div>
+			{/if}
 			<!--
 				Anchors to the home page's pre-footer orientation section
 				(PreFooterCta.svelte, id="free-orientation") — that section
@@ -92,19 +99,12 @@
 				animate-pulse-glow (app.css) is what sets this apart from Book
 				Classes — same primary fill, but a breathing glow ring so it
 				doesn't read as just a second identical button. Unconditional
-				(unlike Buy/Book Classes below) — always visible, every page,
+				(unlike Buy/Book Classes above) — always visible, every page,
 				every viewport, since nothing else duplicates it.
 			-->
 			<Button href="/#free-orientation" variant="primary" size="sm" class="animate-pulse-glow">
 				{dict.nav.getFreeClass}
 			</Button>
-			{#if showSecondaryCtas}
-				<div transition:fade={{ duration: 200 }}>
-					<Button href="/schedule" variant="primary" size="sm">
-						{dict.nav.bookClasses}
-					</Button>
-				</div>
-			{/if}
 
 			<!--
 				Three bars, no circle/border chrome. On hover the top bar nudges

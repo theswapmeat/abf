@@ -116,12 +116,12 @@
 	@keyframes pulse-glow {
 		0%,
 		100% {
-			box-shadow: 0 0 10px 2px color-mix(in srgb, var(--brand-primary) 75%, transparent);
+			box-shadow: 0 0 6px 1px color-mix(in srgb, var(--brand-primary) 55%, transparent);
 			transform: scale(1);
 		}
 		50% {
-			box-shadow: 0 0 24px 7px color-mix(in srgb, var(--brand-primary) 90%, transparent);
-			transform: scale(1.04);
+			box-shadow: 0 0 16px 4px color-mix(in srgb, var(--brand-primary) 70%, transparent);
+			transform: scale(1.02);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.css';
+	import { base } from '$app/paths';
 	import { getDictionary } from '$lib/i18n';
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -12,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="{base}/favicon.ico" sizes="any" />
 </svelte:head>
 
 <JsonLd />

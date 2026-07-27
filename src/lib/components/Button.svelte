@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { base as basePath } from '$app/paths';
 
 	interface Props {
 		variant?: 'primary' | 'outline' | 'ghost';
@@ -85,10 +86,16 @@
 	};
 
 	let classes = $derived(`group ${base} ${sizes[size]} ${className}`);
+
+	// Root-relative hrefs ("/schedule") are internal routes and need the
+	// deploy's base path prefixed (GitHub Pages serves this at /abf/, not
+	// the domain root). Anything else — tel:, mailto:, wa.me, full URLs — is
+	// left untouched.
+	let resolvedHref = $derived(href?.startsWith('/') ? `${basePath}${href}` : href);
 </script>
 
 {#if href}
-	<a {href} {target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} class={classes}>
+	<a href={resolvedHref} {target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} class={classes}>
 		{#if variant !== 'ghost'}<span class={shapes[variant]} aria-hidden="true"></span>{/if}
 		<span class="relative z-10 {textColors[variant]}">{@render children()}</span>
 	</a>

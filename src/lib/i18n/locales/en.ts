@@ -25,6 +25,7 @@ export const en = {
 		],
 		bookClasses: 'Book Classes',
 		buyClasses: 'Buy Classes',
+		getFreeClass: 'Get a Free Class',
 		openMenu: 'Open menu',
 		closeMenu: 'Close menu',
 		overlayGroups: [

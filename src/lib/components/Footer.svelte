@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { env } from '$env/dynamic/public';
+	import { base } from '$app/paths';
 	import { getDictionary } from '$lib/i18n';
 	import { business } from '$lib/data/business';
 	import { submitForm } from '$lib/utils/submitForm';
@@ -36,10 +37,10 @@
 	}
 
 	const socialLinks = [
-		{ label: 'Instagram', href: business.social.instagram, icon: '/media/gym/insta-icon.png' },
-		{ label: 'Facebook', href: business.social.facebook, icon: '/media/gym/fb-icon.png' },
-		{ label: 'YouTube', href: business.social.youtube, icon: '/media/gym/youtube-icon-min.png' },
-		{ label: 'TikTok', href: business.social.tiktok, icon: '/media/gym/tiktok-min.png' }
+		{ label: 'Instagram', href: business.social.instagram, icon: `${base}/media/gym/insta-icon.png` },
+		{ label: 'Facebook', href: business.social.facebook, icon: `${base}/media/gym/fb-icon.png` },
+		{ label: 'YouTube', href: business.social.youtube, icon: `${base}/media/gym/youtube-icon-min.png` },
+		{ label: 'TikTok', href: business.social.tiktok, icon: `${base}/media/gym/tiktok-min.png` }
 	];
 </script>
 
@@ -85,7 +86,7 @@
 			</h2>
 			<ul class="mt-4 flex flex-col gap-2 text-sm">
 				{#each dict.footer.moreLinks as link (link.href)}
-					<li><a href={link.href} class="text-paper transition-colors hover:text-primary">{link.label}</a></li>
+					<li><a href="{base}{link.href}" class="text-paper transition-colors hover:text-primary">{link.label}</a></li>
 				{/each}
 			</ul>
 

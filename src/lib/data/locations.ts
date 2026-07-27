@@ -1,3 +1,4 @@
+import { base } from '$app/paths';
 import { business } from './business';
 
 export interface Amenity {
@@ -27,17 +28,17 @@ export const LOCATIONS: Location[] = [
 		wazeUrl: business.wazeUrl,
 		embedSrc: business.googleMapsEmbedSrc,
 		amenities: [
-			{ label: 'Gym Floor', icon: '/media/gym/gym-icon.png' },
-			{ label: 'MMA Arena', icon: '/media/gym/mma-arena.png' },
-			{ label: 'Cycle Studio', icon: '/media/gym/cycle-studio.png' },
-			{ label: 'Swimming Pool', icon: '/media/gym/swimming-pool.png' },
-			{ label: 'Physiotherapy Studio', icon: '/media/gym/physiotherapy.png' },
-			{ label: 'Sauna', icon: '/media/gym/sauna.png' },
-			{ label: 'Changing Rooms', icon: '/media/gym/changing-room.png' },
-			{ label: 'Shower Rooms', icon: '/media/gym/shower-rooms.png' },
-			{ label: 'Lockers', icon: '/media/gym/lockers.png' },
-			{ label: 'On-Site Parking', icon: '/media/gym/parking.png' },
-			{ label: 'Marina Views', icon: '/media/gym/yacht-views.png' }
+			{ label: 'Gym Floor', icon: `${base}/media/gym/gym-icon.png` },
+			{ label: 'MMA Arena', icon: `${base}/media/gym/mma-arena.png` },
+			{ label: 'Cycle Studio', icon: `${base}/media/gym/cycle-studio.png` },
+			{ label: 'Swimming Pool', icon: `${base}/media/gym/swimming-pool.png` },
+			{ label: 'Physiotherapy Studio', icon: `${base}/media/gym/physiotherapy.png` },
+			{ label: 'Sauna', icon: `${base}/media/gym/sauna.png` },
+			{ label: 'Changing Rooms', icon: `${base}/media/gym/changing-room.png` },
+			{ label: 'Shower Rooms', icon: `${base}/media/gym/shower-rooms.png` },
+			{ label: 'Lockers', icon: `${base}/media/gym/lockers.png` },
+			{ label: 'On-Site Parking', icon: `${base}/media/gym/parking.png` },
+			{ label: 'Marina Views', icon: `${base}/media/gym/yacht-views.png` }
 		],
 		highlights: [
 			'120,000 sqm open-plan facility overlooking Mina Rashid marina',

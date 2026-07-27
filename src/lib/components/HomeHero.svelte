@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { getDictionary } from '$lib/i18n';
 	import Button from './Button.svelte';
 
@@ -11,8 +12,8 @@
 	 * competes with LCP. At ~56MB this is heavy for a hero video — worth
 	 * re-encoding (H.264 at a lower bitrate, or AV1/WebM) before launch.
 	 */
-	const posterSrc = '/media/gym/best-gym-in-dubai.jpg';
-	const videoSrc = '/media/gym/ab-fitness-gym.mp4';
+	const posterSrc = `${base}/media/gym/best-gym-in-dubai.jpg`;
+	const videoSrc = `${base}/media/gym/ab-fitness-gym.mp4`;
 
 	let videoReady = $state(false);
 

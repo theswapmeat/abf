@@ -41,7 +41,13 @@
 	}
 </script>
 
-<section class="border-y border-ink-line bg-primary-dim">
+<!--
+	id + scroll-mt so the header's "Get a Free Class" link (an anchor to this
+	section, since it's home-page-only) doesn't land the section underneath
+	the fixed/sticky header — scroll-mt reserves the header's own height as
+	clearance, same pattern already used for the /classes#id anchor targets.
+-->
+<section id="free-orientation" class="scroll-mt-16 border-y border-ink-line bg-primary-dim md:scroll-mt-20">
 	<div class="container-page grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
 		<div>
 			<p class="text-eyebrow font-semibold text-primary uppercase">{dict.ctaBand.eyebrow}</p>

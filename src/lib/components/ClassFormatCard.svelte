@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import type { ClassFormat } from '$lib/data/classes';
 
 	interface Props {
@@ -9,7 +10,7 @@
 </script>
 
 <a
-	href={`/classes#${format.id}`}
+	href={`${base}/classes#${format.id}`}
 	id={format.id}
 	class="group relative block aspect-3/4 overflow-hidden scroll-mt-24 [clip-path:polygon(23.5%_0,100%_0,76.5%_100%,0_100%)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 >

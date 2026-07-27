@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { getDictionary } from '$lib/i18n';
 	import { focusTrap } from '$lib/actions/focusTrap';
 	import { fade } from 'svelte/transition';
@@ -59,7 +60,7 @@
 									class={`transition-all duration-300 ${open ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'}`}
 								>
 									<a
-										href={link.href}
+										href="{base}{link.href}"
 										onclick={onClose}
 										class="text-base font-semibold text-paper transition-colors hover:text-primary md:text-lg"
 									>
@@ -75,7 +76,7 @@
 			<div class="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:max-w-2xl">
 				{#each dict.nav.promoTiles as tile (tile.heading)}
 					<a
-						href={tile.href}
+						href="{base}{tile.href}"
 						onclick={onClose}
 						class="group shape-lean overflow-hidden border-t-2 border-b-2 border-secondary-line bg-primary-dim transition-colors hover:border-primary"
 					>

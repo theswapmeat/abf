@@ -1,10 +1,18 @@
 @import 'tailwindcss';
 @import './lib/styles/tokens.css';
 
-/* Self-hosted (not Google Fonts CDN) so display type doesn't depend on a third-party request at runtime. Latin subset only — English ships today. */
+/*
+ * Self-hosted (not Google Fonts CDN) so display type doesn't depend on a
+ * third-party request at runtime. Latin subset only — English ships today.
+ * Lives under src/lib/fonts (not static/) and is referenced by a RELATIVE
+ * url() on purpose: Vite resolves relative url()s in CSS as build assets,
+ * fingerprinting them and prefixing the deploy's base path automatically.
+ * A static/ file referenced by an absolute path (/fonts/...) does NOT get
+ * that treatment — under GitHub Pages' /abf/ subpath it would 404.
+ */
 @font-face {
 	font-family: 'Anton';
-	src: url('/fonts/anton-latin-400.woff2') format('woff2');
+	src: url('./lib/fonts/anton-latin-400.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -21,7 +29,7 @@
  */
 @font-face {
 	font-family: 'Roboto';
-	src: url('/fonts/roboto-latin-variable.woff2') format('woff2');
+	src: url('./lib/fonts/roboto-latin-variable.woff2') format('woff2');
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
@@ -85,6 +93,25 @@
 		}
 		to {
 			transform: translateX(-50%);
+		}
+	}
+
+	/*
+	 * Breathing glow ring — the header's "Get a Free Class" button is the
+	 * same solid-primary fill as Book Classes right next to it, so a static
+	 * style difference wasn't enough to set it apart; this is what actually
+	 * draws the eye without introducing a new color outside the brand's
+	 * yellow/white-on-ink palette.
+	 */
+	--animate-pulse-glow: pulse-glow 2.2s ease-in-out infinite;
+
+	@keyframes pulse-glow {
+		0%,
+		100% {
+			box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-primary) 55%, transparent);
+		}
+		50% {
+			box-shadow: 0 0 14px 3px color-mix(in srgb, var(--brand-primary) 55%, transparent);
 		}
 	}
 }

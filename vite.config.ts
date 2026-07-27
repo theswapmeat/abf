@@ -1,5 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
@@ -12,10 +12,27 @@ export default defineConfig({
 				runes: ({ filename }) => filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-			// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-			adapter: adapter()
+			// Fully static export — every route is prerendered (see
+			// src/routes/+layout.ts) since there's no server backing this
+			// deploy target (GitHub Pages). strict: true (the default) fails
+			// the build loudly if anything turns out not to be prerenderable,
+			// instead of silently shipping a broken route.
+			adapter: adapter(),
+
+			// GitHub Pages project sites are served from a subpath
+			// (theswapmeat.github.io/abf/), not the domain root, so every
+			// internal link/asset reference has to be prefixed with this at
+			// runtime (see $app/paths `base` usage throughout the app).
+			// BASE_PATH is set by the GitHub Actions deploy workflow; local
+			// dev/build defaults to '' (root), matching how the site has
+			// always run locally.
+			paths: {
+				// Type-asserted: SvelteKit wants a literal '' | `/${string}`,
+				// but an env var is a plain string at the type level. We
+				// control its only two real values (unset, or '/abf' from
+				// the deploy workflow), both of which satisfy that shape.
+				base: (process.env.BASE_PATH ?? '') as '' | `/${string}`
+			}
 		})
 	]
 });

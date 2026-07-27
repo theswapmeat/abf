@@ -74,7 +74,7 @@ Where a clip-path shape has no fill of its own, a bare cut just trims content wi
 
 ## Typography
 
-Two font families, split by role — body copy uses **Roboto** (`--font-sans`), display headlines use **Anton** (`--font-display`, applied via the `font-display` utility). Both are self-hosted (`static/fonts/`, latin subset only, matching English-only content) rather than pulled from Google Fonts' CDN, for the same reason the rest of the site avoids third-party runtime dependencies — no external request, no FOUC risk from a slow third-party host.
+Two font families, split by role — body copy uses **Roboto** (`--font-sans`), display headlines use **Anton** (`--font-display`, applied via the `font-display` utility). Both are self-hosted (`src/lib/fonts/`, latin subset only, matching English-only content) rather than pulled from Google Fonts' CDN, for the same reason the rest of the site avoids third-party runtime dependencies — no external request, no FOUC risk from a slow third-party host. They live under `src/` (not `static/`) and are referenced from `app.css` by a relative `url()` on purpose, so Vite's asset pipeline fingerprints them and prefixes the deploy's base path automatically — see "Deployment" below.
 
 Roboto is self-hosted as its actual **variable font** file (`roboto-latin-variable.woff2`, one file spanning the whole `wght` 100–900 axis), declared in `app.css` with a `font-weight: 100 900` range rather than one `@font-face` per static weight. Every weight utility in use (`font-medium`, `font-semibold`, `font-bold`, etc.) resolves to its real instance on that axis instead of the browser approximating or synthesizing a weight that isn't in the file.
 
@@ -94,4 +94,15 @@ Anton ships as a single weight (400) that's already at its maximum visual boldne
 
 ## Deployment
 
-Currently on `@sveltejs/adapter-auto`, which picks an adapter based on the deploy target at build time. Swap for a specific adapter (`adapter-node`, `adapter-vercel`, etc.) in `vite.config.ts` once hosting is decided.
+Deployed to **GitHub Pages** (`.github/workflows/deploy.yml`, builds and publishes on every push to `main`) via `@sveltejs/adapter-static` — the whole site is prerendered at build time (`src/routes/+layout.ts`), since Pages has no server runtime.
+
+GitHub Pages serves a project repo like this one at `https://<user>.github.io/<repo>/` — a subpath, not the domain root — so every internal link, image, and font reference in the app is base-path-aware rather than hardcoded to `/`:
+
+- Internal `<a href>`s go through `Button.svelte` (which prefixes any `href` starting with `/`) or import `base` from `$app/paths` directly.
+- `static/`-served images (trainer photos, class photos, icons, the hero video) are prefixed with `base` at the point they're referenced in `src/lib/data/*.ts` and a couple of components (`HomeHero.svelte`, `Footer.svelte`).
+- Self-hosted fonts live under `src/lib/fonts/` (not `static/fonts/`) specifically so `app.css`'s `url()` references can be relative — Vite treats a relative CSS `url()` as a build asset and fingerprints/base-prefixes it automatically, which does **not** happen for an absolute `/fonts/...` reference to a `static/` file.
+- `static/.nojekyll` is required — without it, GitHub Pages runs the output through Jekyll, which ignores any folder starting with `_` and would 404 SvelteKit's own `_app/` asset directory.
+
+The `BASE_PATH` env var (read in `vite.config.ts`) is what drives all of this — the deploy workflow sets it to `/abf` for the build; local dev/build leaves it unset and defaults to the root, which is why nothing about local development changed.
+
+If you ever point a custom domain at this deployment instead (serving from the domain root), the base path can go back to `''` and none of the above breaks — it just becomes a no-op prefix.

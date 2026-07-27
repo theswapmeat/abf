@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { getDictionary } from '$lib/i18n';
 	import { business } from '$lib/data/business';
 	import Seo from '$lib/components/Seo.svelte';
@@ -23,7 +24,7 @@
 />
 
 <section class="container-page py-16 md:py-24">
-	<a href="/team" class="text-sm font-semibold text-muted transition-colors hover:text-primary">
+	<a href="{base}/team" class="text-sm font-semibold text-muted transition-colors hover:text-primary">
 		← {dict.trainerDetail.backToTeam}
 	</a>
 

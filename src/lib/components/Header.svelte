@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
+	import { fade } from 'svelte/transition';
 	import { getDictionary } from '$lib/i18n';
 	import logo from '$lib/assets/logo.png';
 	import Button from './Button.svelte';
@@ -12,8 +14,18 @@
 	// Only the home page has a hero worth floating over transparently — every
 	// other page's PageHero is a flat color block, so a see-through header
 	// there would just reveal that same color, not the hero video underneath.
-	let isHome = $derived(page.url.pathname === '/');
+	// Compared against `${base}/` (not a bare '/') because under a subpath
+	// deploy (GitHub Pages serves this at /abf/) the home page's real
+	// pathname is /abf/, not /.
+	let isHome = $derived(page.url.pathname === `${base}/`);
 	let transparent = $derived(isHome && !scrolled && !open);
+
+	// Buy/Book Classes duplicate the hero's own two CTA buttons while the
+	// hero is on screen, so they're hidden there and only appear once the
+	// user scrolls past it (or is on any other page, where there's no hero
+	// CTA to be redundant with). Get a Free Class has no such duplicate
+	// anywhere, so it's unconditional.
+	let showSecondaryCtas = $derived(!isHome || scrolled);
 
 	$effect(() => {
 		if (!isHome) return;
@@ -49,17 +61,50 @@
 		: 'sticky'} {transparent ? 'border-transparent bg-transparent' : 'border-ink-line bg-ink/90 backdrop-blur'}"
 >
 	<div class="container-page flex h-16 items-center justify-between py-3 md:h-20">
-		<a href="/" class="shrink-0" aria-label="AB Fitness — home">
+		<a href="{base}/" class="shrink-0" aria-label="AB Fitness — home">
 			<img src={logo} alt="AB Fitness" width="112" height="82" class="h-12 w-auto sm:h-14" />
 		</a>
 
 		<div class="flex items-center gap-2 sm:gap-3">
-			<Button href="/membership" variant="outline" size="sm" class="hidden md:inline-flex">
-				{dict.nav.buyClasses}
+			<!--
+				Wrapper divs carry the responsive hidden/md:block split instead
+				of passing "hidden md:inline-flex" straight to Button — Button's
+				own base classes always include inline-flex, and a class prop
+				fighting the component's own base over the same `display`
+				property is a source-order-dependent cascade conflict, not
+				something JS string concatenation order controls. Wrapping in
+				a plain element with no competing display utility avoids it
+				entirely (this was previously broken exactly this way: both
+				buttons were showing on mobile despite "hidden").
+			-->
+			{#if showSecondaryCtas}
+				<div class="hidden md:block" transition:fade={{ duration: 200 }}>
+					<Button href="/membership" variant="outline" size="sm">
+						{dict.nav.buyClasses}
+					</Button>
+				</div>
+			{/if}
+			<!--
+				Anchors to the home page's pre-footer orientation section
+				(PreFooterCta.svelte, id="free-orientation") — that section
+				only exists on "/", so this always targets "/#free-orientation"
+				rather than a same-page hash, working correctly from any page.
+				animate-pulse-glow (app.css) is what sets this apart from Book
+				Classes — same primary fill, but a breathing glow ring so it
+				doesn't read as just a second identical button. Unconditional
+				(unlike Buy/Book Classes below) — always visible, every page,
+				every viewport, since nothing else duplicates it.
+			-->
+			<Button href="/#free-orientation" variant="primary" size="sm" class="animate-pulse-glow">
+				{dict.nav.getFreeClass}
 			</Button>
-			<Button href="/schedule" variant="primary" size="sm">
-				{dict.nav.bookClasses}
-			</Button>
+			{#if showSecondaryCtas}
+				<div transition:fade={{ duration: 200 }}>
+					<Button href="/schedule" variant="primary" size="sm">
+						{dict.nav.bookClasses}
+					</Button>
+				</div>
+			{/if}
 
 			<!--
 				Three bars, no circle/border chrome. On hover the top bar nudges

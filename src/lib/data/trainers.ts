@@ -5,6 +5,8 @@
  * that is NOT placeholder; no isPlaceholderContent flag, nothing to swap.
  */
 
+import { base } from '$app/paths';
+
 export interface Trainer {
 	slug: string;
 	name: string;
@@ -177,7 +179,7 @@ export const TRAINERS: Trainer[] = RAW_TRAINERS.map((trainer) => ({
 		.map((part) => part.trim())
 		.filter(Boolean)
 		.slice(0, 5),
-	portrait: { src: `/media/gym/${trainer.image}`, alt: `${trainer.name}, ${trainer.role} at AB Fitness` }
+	portrait: { src: `${base}/media/gym/${trainer.image}`, alt: `${trainer.name}, ${trainer.role} at AB Fitness` }
 }));
 
 export function getTrainerBySlug(slug: string): Trainer | undefined {

@@ -1,3 +1,5 @@
+import { base } from '$app/paths';
+
 export interface ClassFormat {
 	id: string;
 	name: string;
@@ -19,7 +21,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 			'Coached striking and grappling rounds on the same arena floor our fight team trains on. Pad work, bag work, and live drilling, scaled to your level.',
 		intensity: 'High',
 		duration: '60 min',
-		image: { src: '/media/gym/ab-fitness-mma-classes.jpg', alt: 'MMA class in progress at AB Fitness' }
+		image: { src: `${base}/media/gym/ab-fitness-mma-classes.jpg`, alt: 'MMA class in progress at AB Fitness' }
 	},
 	{
 		id: 'strength',
@@ -29,7 +31,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 			'Programmed strength cycles — squat, hinge, press, pull — followed by a short conditioning piece. Coached sets, spotted lifts, no guesswork.',
 		intensity: 'High',
 		duration: '50 min',
-		image: { src: '/media/gym/strength-abfitness.jpg', alt: 'Strength training floor at AB Fitness' }
+		image: { src: `${base}/media/gym/strength-abfitness.jpg`, alt: 'Strength training floor at AB Fitness' }
 	},
 	{
 		id: 'cycle',
@@ -39,7 +41,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 			'Low-impact, high-output rides in a dedicated studio. Resistance and cadence intervals coached live, every bike fitted before you start.',
 		intensity: 'Moderate',
 		duration: '45 min',
-		image: { src: '/media/gym/cycling-studio-abfitness.jpg', alt: 'Group cycle studio at AB Fitness' }
+		image: { src: `${base}/media/gym/cycling-studio-abfitness.jpg`, alt: 'Group cycle studio at AB Fitness' }
 	},
 	{
 		id: 'swim',
@@ -50,7 +52,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 		intensity: 'Moderate',
 		duration: '45 min',
 		// No AB Fitness swim photo published yet (only a small facility icon exists) — licensed Unsplash stock.
-		image: { src: '/media/stock/swim-fitness.jpg', alt: 'Swimmer doing freestyle laps in a pool' },
+		image: { src: `${base}/media/stock/swim-fitness.jpg`, alt: 'Swimmer doing freestyle laps in a pool' },
 		isStockImage: true
 	},
 	{
@@ -62,7 +64,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 		intensity: 'Low',
 		duration: '30–45 min',
 		// No AB Fitness physio photo published yet (only a small facility icon exists) — licensed Unsplash stock.
-		image: { src: '/media/stock/recovery-physio.jpg', alt: 'Physiotherapist assessing a client’s knee' },
+		image: { src: `${base}/media/stock/recovery-physio.jpg`, alt: 'Physiotherapist assessing a client’s knee' },
 		isStockImage: true
 	},
 	{
@@ -73,7 +75,7 @@ export const CLASS_FORMATS: ClassFormat[] = [
 			'Discipline-first martial arts classes for kids, run by safeguarding-certified coaches, in a class split by age and experience.',
 		intensity: 'Moderate',
 		duration: '40 min',
-		image: { src: '/media/gym/kids-muay-thai.jpg', alt: 'Kids Muay Thai class at AB Fitness' }
+		image: { src: `${base}/media/gym/kids-muay-thai.jpg`, alt: 'Kids Muay Thai class at AB Fitness' }
 	}
 ];
 

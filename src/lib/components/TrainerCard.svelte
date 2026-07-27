@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import type { Trainer } from '$lib/data/trainers';
 	import { getDictionary } from '$lib/i18n';
 
@@ -11,7 +12,7 @@
 </script>
 
 <a
-	href={`/team/${trainer.slug}`}
+	href={`${base}/team/${trainer.slug}`}
 	class="group flex flex-col items-center rounded-xl p-4 text-center transition-colors hover:bg-ink-line focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 >
 	<!--

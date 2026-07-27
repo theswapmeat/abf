@@ -314,16 +314,10 @@ export const en = {
 		privacyError: 'Please accept the privacy policy to continue.'
 	},
 
+	// Shared between the footer and home-page newsletter signup forms.
 	newsletter: {
-		eyebrow: 'Before you go',
-		headline: "Get 10% off your first month",
-		body: 'Join the list for class drops, events, and member-only offers. One email a month, max.',
 		emailPlaceholder: 'Your email address',
-		submit: 'Get my code',
-		dismiss: 'No thanks',
-		close: 'Close',
-		successHeading: 'Check your inbox',
-		successBody: "Your code is on its way. Welcome to AB Fitness."
+		successHeading: 'Check your inbox'
 	},
 
 	whatsapp: {

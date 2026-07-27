@@ -46,7 +46,7 @@ Search the codebase for `isPlaceholderContent` / `isStockImage` to find every fl
 
 ## Lead capture endpoints
 
-Forms (pre-footer CTA, contact page, footer/home/exit-intent newsletter) post to `PUBLIC_LEAD_FORM_ENDPOINT` / `PUBLIC_NEWSLETTER_ENDPOINT` via `src/lib/utils/submitForm.ts`. With no endpoint configured (the default), a submission logs its payload to the console and resolves as successful — this lets the full UI/UX be built and tested before a real CRM/marketing endpoint exists. Set both in `.env` to wire up a real backend.
+Forms (pre-footer CTA, contact page, footer/home newsletter) post to `PUBLIC_LEAD_FORM_ENDPOINT` / `PUBLIC_NEWSLETTER_ENDPOINT` via `src/lib/utils/submitForm.ts`. With no endpoint configured (the default), a submission logs its payload to the console and resolves as successful — this lets the full UI/UX be built and tested before a real CRM/marketing endpoint exists. Set both in `.env` to wire up a real backend.
 
 ## i18n
 

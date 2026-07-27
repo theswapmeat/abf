@@ -5,7 +5,6 @@
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import WhatsAppButton from '$lib/components/WhatsAppButton.svelte';
-	import NewsletterModal from '$lib/components/NewsletterModal.svelte';
 	import JsonLd from '$lib/components/JsonLd.svelte';
 
 	let { children } = $props();
@@ -30,4 +29,3 @@
 
 <Footer />
 <WhatsAppButton />
-<NewsletterModal />

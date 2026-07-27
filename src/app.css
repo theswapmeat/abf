@@ -1,0 +1,251 @@
+@import 'tailwindcss';
+@import './lib/styles/tokens.css';
+
+/* Self-hosted (not Google Fonts CDN) so display type doesn't depend on a third-party request at runtime. Latin subset only — English ships today. */
+@font-face {
+	font-family: 'Anton';
+	src: url('/fonts/anton-latin-400.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+/*
+ * Body font. Self-hosted for the same reason as Anton above. This is the
+ * actual variable-font file (a wght axis from 100-900 in one file, not a
+ * single static weight), declared with a font-weight RANGE so every weight
+ * utility in use across the app (font-medium/500, font-semibold/600,
+ * font-bold/700, etc.) resolves to its real instance on that axis instead of
+ * the browser approximating or synthetically bolding a weight that doesn't
+ * exist in the file.
+ */
+@font-face {
+	font-family: 'Roboto';
+	src: url('/fonts/roboto-latin-variable.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+/*
+  Tailwind v4 theme mapping. Every color utility resolves back to a token in
+  tokens.css — there is no hex anywhere below this line. Adding a new color
+  means adding a token first, not reaching for an arbitrary value.
+*/
+@theme {
+	--color-ink: var(--ink);
+	--color-ink-soft: var(--ink-soft);
+	--color-ink-line: var(--ink-line);
+	--color-paper: var(--paper);
+	--color-paper-line: var(--paper-line);
+	--color-primary: var(--brand-primary);
+	--color-primary-dim: var(--brand-primary-dim);
+	--color-secondary: var(--brand-secondary);
+	--color-secondary-line: var(--brand-secondary-line);
+	--color-muted: var(--muted);
+
+	--font-sans:
+		'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	/*
+	 * Anton is a single-weight (400) display face that's already at maximum
+	 * visual boldness by design — stacking Tailwind's font-black (900) on
+	 * top of it would ask the browser to synthesize an even heavier weight
+	 * that doesn't exist, which renders as smeared/fake bold. Every call
+	 * site that switches to font-display also drops font-black for font-normal.
+	 */
+	--font-display:
+		'Anton', 'Roboto', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+	/* Giant display type scale — the rippedphl "energy": oversized, tight,
+	   uppercase-friendly. Fluid via clamp() so it never needs a breakpoint. */
+	--text-display-1: clamp(2.75rem, 1rem + 6vw, 7.5rem);
+	--text-display-1--line-height: 0.94;
+	--text-display-1--letter-spacing: -0.02em;
+	--text-display-2: clamp(2.25rem, 1rem + 4vw, 4.75rem);
+	--text-display-2--line-height: 0.98;
+	--text-display-2--letter-spacing: -0.015em;
+	--text-display-3: clamp(1.625rem, 0.75rem + 2vw, 2.5rem);
+	--text-display-3--line-height: 1.05;
+	--text-display-3--letter-spacing: -0.01em;
+	--text-eyebrow: 0.8125rem;
+	--text-eyebrow--letter-spacing: 0.18em;
+
+	/*
+	 * 14s is only the pre-JS fallback (and the value the very first paint
+	 * uses). PrinciplesMarquee.svelte overrides animation-duration inline
+	 * once mounted, computed from the track's actual rendered width so the
+	 * speed (~64px/s — tuned by feel, not a guess) stays correct regardless
+	 * of viewport width or how many times the word list ends up repeated.
+	 */
+	--animate-marquee: marquee 14s linear infinite;
+
+	@keyframes marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+}
+
+@layer base {
+	* {
+		border-color: var(--ink-line);
+	}
+
+	html {
+		color-scheme: dark;
+		/*
+		 * Opening the nav overlay sets body { overflow: hidden } (NavOverlay.svelte)
+		 * to lock background scroll. That removes the scrollbar and widens the
+		 * viewport by its width, shifting the full-bleed sticky/fixed header
+		 * sideways for a frame. Reserving the gutter permanently means the
+		 * scrollbar's presence never changes the available width.
+		 */
+		scrollbar-gutter: stable;
+	}
+
+	body {
+		background-color: var(--ink);
+		color: var(--paper);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--brand-primary);
+		outline-offset: 3px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.001ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.001ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}
+
+@utility container-page {
+	margin-inline: auto;
+	padding-inline: 1.25rem;
+	max-width: 90rem;
+
+	@media (min-width: 48rem) {
+		padding-inline: 2.5rem;
+	}
+}
+
+.reveal {
+	opacity: 0;
+	transform: translateY(1.25rem);
+	transition:
+		opacity 0.6s ease var(--reveal-delay, 0ms),
+		transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal[data-revealed] {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+@utility sr-only-focusable {
+	position: absolute;
+	inset-inline-start: 1rem;
+	inset-block-start: -3rem;
+	z-index: 100;
+	transition: inset-block-start 0.15s ease;
+
+	&:focus {
+		inset-block-start: 1rem;
+	}
+}
+
+/*
+ * One angle for every parallelogram in the app — buttons, inputs, cards,
+ * photos. NOT the Google Maps embeds (LocationCard.svelte,
+ * contact/+page.svelte) — those are deliberately plain rectangles; see the
+ * comment at each call site for why (short version: Google's own UI inside
+ * the embed isn't clip-path-aware, and a decorative cut sliced through real
+ * business info, not just map tiles).
+ *
+ * The angle here was measured off the reference button (Book Classes, lg
+ * size, 58px tall, 10px clip offset -> atan(10/58) ≈ 10deg) and is used as a
+ * true CSS angle from here on, not a fixed pixel offset re-guessed per
+ * component. A fixed-px clip-path offset only matches a target angle for
+ * ONE specific element height; reusing that same pixel number on a taller
+ * element silently flattens the angle (this is why the cards previously
+ * looked barely-slanted next to the buttons).
+ *
+ * For text/UI chrome (buttons, inputs, card shells): skewX(-10deg) on the
+ * shape, skewX(10deg) on an inner content wrapper to cancel it back upright.
+ * `.shape-lean` / `.shape-unlean` are that pair.
+ *
+ * For photos (trainer portraits, class photos — not iframes, see above):
+ * skewing would visually warp the image, so those use clip-path instead,
+ * with the px offset computed per element as `own-height * tan(10deg)`
+ * (tan(10deg) ≈ 0.176) — see the comment at each
+ * call site for that element's specific number.
+ */
+.shape-lean {
+	transform: skewX(-10deg);
+}
+
+/*
+ * will-change: transform, scoped to :hover/:focus-visible only — NOT applied
+ * permanently. Without it at all, a shape-lean element sitting under an
+ * ancestor with backdrop-filter (the sticky header's frosted-glass blur)
+ * visibly blurs for the duration of any animated transform inside it — e.g.
+ * the button shine sweep — because Chromium (re-)promotes the layer when the
+ * animation starts and briefly composites it through the ancestor's blur
+ * pass. will-change: transform prevents that.
+ *
+ * But leaving will-change on permanently (i.e. just adding it to .shape-lean
+ * itself) traded one bug for another: it keeps the element on its own GPU
+ * layer at all times, which degrades text anti-aliasing and made every
+ * button's label look soft/blurry at rest, not just during the hover
+ * animation. Scoping it to the interaction itself keeps text crisp at rest
+ * and still promotes the layer in time for the animation that starts at the
+ * same moment.
+ */
+.shape-lean:hover,
+.shape-lean:focus-visible {
+	will-change: transform;
+}
+
+.shape-unlean {
+	transform: skewX(10deg);
+}
+
+/*
+ * Native form controls (input/textarea/select) can't use the skew pair —
+ * skewing the element would slant the browser's own rendering of the typed
+ * value, and there's no way to wrap just that text in a counter-skew span.
+ * clip-path is the only option here, so it's tuned to the field's actual
+ * measured height (48px at py-3/text-sm) so it lands on the real 10deg
+ * rather than an eyeballed number: 48 * tan(10deg) ≈ 8.5px.
+ */
+@utility parallelogram {
+	clip-path: polygon(8.5px 0, 100% 0, calc(100% - 8.5px) 100%, 0 100%);
+}
+
+/* Soft primary-colored glow behind display text — used sparingly (the
+   principles marquee) as a bit of energy without introducing a new color. */
+@utility text-glow-primary {
+	text-shadow:
+		0 0 12px color-mix(in srgb, var(--brand-primary) 70%, transparent),
+		0 0 32px color-mix(in srgb, var(--brand-primary) 40%, transparent);
+}
+

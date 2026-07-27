@@ -1,0 +1,38 @@
+/*
+  Color tokens — the only place a hex value is allowed to exist.
+  Every value here is taken directly from the AB Fitness logo (primary,
+  secondary) or is one of the two fixed neutrals. No invented hues.
+
+  Source: src/lib/assets/logo.png, sampled directly.
+    primary   -> yellow fill of the "AB" mark   (#F7EF24)
+    secondary -> white of the "FITNESS" wordmark (#FFFFFF)
+
+  WCAG 2.1 contrast, verified (see scratchpad calc, not re-derived by eye):
+    paper on ink            17.76:1   OK body text (needs 4.5:1)
+    primary on ink           16.24:1   OK body text, large text, fills
+    secondary(white) on ink 19.68:1   OK body text, large text, fills
+    muted (paper @ 62%) /ink 7.08:1   OK body text
+    primary on paper          1.09:1   FAILS — never pair
+    secondary on paper        1.11:1   FAILS — never pair
+
+  Rule of thumb: primary and secondary only ever sit against --ink (as fill
+  or as text). They never sit against --paper — both are light-on-light and
+  fail AA. When a brand color needs to appear "on light", give it an --ink
+  fill behind it (a chip, a badge, a button) rather than placing it directly
+  on --paper.
+*/
+
+:root {
+	--brand-primary: #f7ef24;
+	--brand-secondary: #ffffff;
+	--ink: #0b0b0b;
+	--paper: #f5f3ef;
+	--muted: rgba(245, 243, 239, 0.62);
+
+	/* Derived, not invented: alpha/lightness variants of the tokens above. */
+	--ink-soft: rgba(11, 11, 11, 0.72);
+	--ink-line: rgba(11, 11, 11, 0.14);
+	--paper-line: rgba(245, 243, 239, 0.16);
+	--brand-primary-dim: rgba(247, 239, 36, 0.16);
+	--brand-secondary-line: rgba(255, 255, 255, 0.22);
+}

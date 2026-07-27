@@ -103,15 +103,25 @@
 	 * draws the eye without introducing a new color outside the brand's
 	 * yellow/white-on-ink palette.
 	 */
-	--animate-pulse-glow: pulse-glow 2.2s ease-in-out infinite;
+	/*
+	 * Never dips to zero — a pulse that fades all the way out means roughly
+	 * half of every cycle looks identical to a plain button, which is exactly
+	 * why the first pass at this (0 -> 14px -> 0) still read as "the same" in
+	 * a still screenshot. This one oscillates between a already-strong glow
+	 * and a bigger one, plus a slight scale, so it's unmistakable in any
+	 * single frame, animated or not.
+	 */
+	--animate-pulse-glow: pulse-glow 1.6s ease-in-out infinite;
 
 	@keyframes pulse-glow {
 		0%,
 		100% {
-			box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-primary) 55%, transparent);
+			box-shadow: 0 0 10px 2px color-mix(in srgb, var(--brand-primary) 75%, transparent);
+			transform: scale(1);
 		}
 		50% {
-			box-shadow: 0 0 14px 3px color-mix(in srgb, var(--brand-primary) 55%, transparent);
+			box-shadow: 0 0 24px 7px color-mix(in srgb, var(--brand-primary) 90%, transparent);
+			transform: scale(1.04);
 		}
 	}
 }

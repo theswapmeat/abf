@@ -131,16 +131,16 @@
 				The rotating gradient ring is a separate span BEHIND the
 				Button, not something baked into Button.svelte itself — it's
 				a one-off treatment for this single button, not a reusable
-				variant. It's skewed the same as the button (shape-lean) and
-				needs its OWN corner-overscan on top of that, same idea as
-				Button.svelte's shapeOverscan: at a ring height of 42px
-				(sm's 36px button + 3px reveal top and bottom), skewing it
-				shifts the top/bottom edges by 42/2*tan(10deg) ≈ 3.7px, so
-				-6.7px (3px reveal + 3.7px overscan) horizontally keeps the
-				ring's slanted edges from receding inside the button's own
-				corners the way a plain -3px-all-round inset did — which is
-				what made this look like a rectangle glowing behind a
-				parallelogram instead of an actual border tracing its shape.
+				variant. It's skewed the same way (shape-lean) and pivoted
+				from the same edge (origin-bottom) as Button's own shape span
+				now is — matching Button's current anchor convention, not the
+				center-pivot one this was originally tuned against, which
+				went stale (and visibly gapped) once Button switched. A
+				simple symmetric -3px inset on both sides approximates the
+				border-width reveal closely enough here — it's blurred, so
+				the ~1px difference from a fully precise per-corner
+				calculation doesn't read as a defect the way it did on the
+				button itself, which has a hard-edged border tracing it.
 				The wrapper is inline-block so it shrink-wraps to the
 				Button's own rendered size; the ring is positioned first so
 				it paints behind the Button (later sibling) with no z-index
@@ -148,7 +148,7 @@
 			-->
 			<div class="relative inline-block">
 				<span
-					class="gradient-border-ring animate-gradient-spin shape-lean -inset-y-0.75 -left-[6.7px] -right-[6.7px]"
+					class="gradient-border-ring animate-gradient-spin shape-lean origin-bottom -inset-y-0.75 -left-0.75 -right-0.75"
 					aria-hidden="true"
 				></span>
 				<Button href="/#free-orientation" variant="primary" size="sm">

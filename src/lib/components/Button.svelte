@@ -48,25 +48,35 @@
 		"before:content-[''] before:absolute before:inset-y-0 before:-left-1/4 before:w-1/4 before:transition-transform before:duration-500 before:ease-out group-hover:before:translate-x-[520%]";
 
 	/*
-	 * The shape span is inset-y-0 (full height) but NOT flush left/right —
-	 * it overshoots the parent horizontally on both sides by height/2 *
-	 * tan(10deg), one per size (heights are fixed per size: sm 36px, md
-	 * 48px, lg 60px). Without this, a plain inset-0 span skews around its
-	 * own center, and since skewX shifts the top edge one way and the
-	 * bottom edge the other, two OPPOSITE corners end up receding inside
-	 * the parent's rectangular bounds instead of reaching its edge — which
-	 * exposed the page background through a small triangular gap at those
-	 * corners (only ever noticed once a button had a glow to highlight the
-	 * gap against, but it's present on every button this shape is used on).
-	 * Overshooting by that same amount on both sides means even the
-	 * receding edge still reaches at least as far as the original corner.
+	 * origin-bottom, not the default center: form inputs' parallelogram
+	 * (the `parallelogram` clip-path utility) keeps its bottom-left corner
+	 * fixed at the field's true left edge and only shifts the top-left
+	 * corner inward — so a button sitting right below/after a field in the
+	 * same column had its diagonal edge start from a visibly different
+	 * horizontal position than the field's, even though both were the same
+	 * true 10deg angle. Pivoting the skew from the bottom edge instead of
+	 * the center makes the button's bottom-left corner ALSO land exactly at
+	 * its own true left edge, matching that same anchor point (confirmed
+	 * via computed transform-origin/matrix comparison against a contact-page
+	 * input, not just eyeballing it).
+	 *
+	 * This span is flush (inset-0), not overscan-extended on the left the
+	 * way it briefly was mid-fix — extending the left edge outward to
+	 * protect the top-left corner from receding also drags the BOTTOM-left
+	 * corner along with it (a plain rectangle's left edge is one straight
+	 * line pre-transform; you can't move it for one row without moving it
+	 * for all rows), which undoes the exact alignment this is for.
+	 *
+	 * A same-color fill behind the outer element was tried as a fix for the
+	 * resulting top-left recede and reverted — it "hid" the gap by matching
+	 * color, but since that fill is an unskewed rectangle, it also visibly
+	 * squared off that corner, making the button look rectangular there
+	 * instead of like a parallelogram. Confirmed by rendering it, not just
+	 * reasoning about it. Left as a small, deliberate recede instead — it's
+	 * the same kind of corner every other shape-lean element in the app
+	 * already has (cards, nav tiles), just usually unnoticed because
+	 * nothing else there has a border tracing that exact edge.
 	 */
-	const shapeOverscan: Record<string, string> = {
-		sm: '-left-[3.2px] -right-[3.2px]',
-		md: '-left-[4.25px] -right-[4.25px]',
-		lg: '-left-[5.3px] -right-[5.3px]'
-	};
-
 	const shapeBase: Record<string, string> = {
 		// Invert punch (fill flips yellow -> ink) plus the same diagonal shine
 		// sweep used on outline — the shine reads as a light streak against
@@ -82,9 +92,7 @@
 		ghost: ''
 	};
 
-	let shapeClasses = $derived(
-		variant === 'ghost' ? '' : `absolute inset-y-0 ${shapeOverscan[size]} ${shapeBase[variant]}`
-	);
+	let shapeClasses = $derived(variant === 'ghost' ? '' : `absolute inset-0 origin-bottom ${shapeBase[variant]}`);
 
 	const textColors: Record<string, string> = {
 		primary: 'text-ink transition-colors duration-200 group-hover:text-primary',

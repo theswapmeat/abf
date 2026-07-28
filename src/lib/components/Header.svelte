@@ -9,7 +9,7 @@
 
 	const dict = getDictionary();
 	let open = $state(false);
-	let scrolled = $state(false);
+	let heroOutOfView = $state(false);
 
 	// Only the home page has a hero worth floating over transparently — every
 	// other page's PageHero is a flat color block, so a see-through header
@@ -18,23 +18,38 @@
 	// deploy (GitHub Pages serves this at /abf/) the home page's real
 	// pathname is /abf/, not /.
 	let isHome = $derived(page.url.pathname === `${base}/`);
-	let transparent = $derived(isHome && !scrolled && !open);
+	let transparent = $derived(isHome && !heroOutOfView && !open);
 
 	// Buy/Book Classes duplicate the hero's own two CTA buttons while the
 	// hero is on screen, so they're hidden there and only appear once the
-	// user scrolls past it (or is on any other page, where there's no hero
-	// CTA to be redundant with). Get a Free Class has no such duplicate
+	// hero has scrolled out of view (or on any other page, where there's no
+	// hero CTA to be redundant with). Get a Free Class has no such duplicate
 	// anywhere, so it's unconditional.
-	let showSecondaryCtas = $derived(!isHome || scrolled);
+	let showSecondaryCtas = $derived(!isHome || heroOutOfView);
 
+	/*
+	 * IntersectionObserver against the hero's own element (id="home-hero" in
+	 * HomeHero.svelte), not a fixed scrollY number — a flat pixel threshold
+	 * (this used to be `window.scrollY > 40`) has no relationship to the
+	 * hero's actual height, so it fired almost immediately, well before the
+	 * hero (and its own Book/Buy Classes CTAs) had actually scrolled out of
+	 * view. That defeated the point: the header would go solid and show the
+	 * duplicate buttons while the hero's identical buttons were still fully
+	 * on screen. Watching the hero element directly means this stays correct
+	 * regardless of hero height, viewport size, or future content changes.
+	 */
 	$effect(() => {
 		if (!isHome) return;
-		const onScroll = () => {
-			scrolled = window.scrollY > 40;
-		};
-		onScroll();
-		window.addEventListener('scroll', onScroll, { passive: true });
-		return () => window.removeEventListener('scroll', onScroll);
+		const heroEl = document.getElementById('home-hero');
+		if (!heroEl) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				heroOutOfView = !entry.isIntersecting;
+			},
+			{ threshold: 0 }
+		);
+		observer.observe(heroEl);
+		return () => observer.disconnect();
 	});
 
 	function toggle() {

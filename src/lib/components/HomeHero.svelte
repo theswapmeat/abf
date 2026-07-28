@@ -25,7 +25,10 @@
 	});
 </script>
 
-<section class="relative flex flex-1 items-center overflow-hidden bg-ink">
+<!-- id is a hook for Header.svelte's IntersectionObserver — it watches this
+	 section to know exactly when the hero (and its own Book/Buy Classes CTAs)
+	 has scrolled out of view, rather than guessing with a fixed scrollY value. -->
+<section id="home-hero" class="relative flex flex-1 items-center overflow-hidden bg-ink">
 	<img
 		src={posterSrc}
 		alt=""

@@ -86,8 +86,21 @@
 			{/if}
 			{#if showSecondaryCtas}
 				<div transition:fade={{ duration: 200 }}>
+					<!--
+						Shorter label below the sm breakpoint — the full "Book
+						Classes"/"Get a Free Class" text was wrapping onto two
+						lines in the cramped mobile header (logo + 2 buttons +
+						hamburger competing for ~360px), which read as an
+						oversized, broken-looking button. Swapping the text
+						itself (not the button's own padding/size) keeps this
+						completely independent of Button's own size/geometry
+						math, so there's no risk of reintroducing the corner-
+						bleed issue that comes from mismatching a button's
+						declared size against its actual rendered height.
+					-->
 					<Button href="/schedule" variant="primary" size="sm">
-						{dict.nav.bookClasses}
+						<span class="sm:hidden">{dict.nav.bookClassesShort}</span>
+						<span class="hidden sm:inline">{dict.nav.bookClasses}</span>
 					</Button>
 				</div>
 			{/if}
@@ -103,7 +116,8 @@
 				every viewport, since nothing else duplicates it.
 			-->
 			<Button href="/#free-orientation" variant="primary" size="sm" class="animate-pulse-glow">
-				{dict.nav.getFreeClass}
+				<span class="sm:hidden">{dict.nav.getFreeClassShort}</span>
+				<span class="hidden sm:inline">{dict.nav.getFreeClass}</span>
 			</Button>
 
 			<!--

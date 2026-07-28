@@ -24,8 +24,10 @@ export const en = {
 			{ label: 'Contact', href: '/contact' }
 		],
 		bookClasses: 'Book Classes',
+		bookClassesShort: 'Book',
 		buyClasses: 'Buy Classes',
 		getFreeClass: 'Get a Free Class',
+		getFreeClassShort: 'Free Class',
 		openMenu: 'Open menu',
 		closeMenu: 'Close menu',
 		overlayGroups: [

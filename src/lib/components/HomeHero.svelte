@@ -54,7 +54,24 @@
 		<h1 class="text-display-1 max-w-4xl font-display font-normal text-paper uppercase">{dict.home.heroHeadline}</h1>
 		<p class="mt-6 max-w-xl text-lg text-paper/90">{dict.home.heroSub}</p>
 
-		<div class="mt-8 flex flex-wrap gap-4">
+		<!--
+			Two separate button pairs, not one pair with responsive
+			padding/text-size classes tacked on: passing size overrides
+			straight to Button's `class` prop would fight its own
+			size-driven classes over the same properties (padding, font-size)
+			in a source-order-dependent way — the same class of bug that
+			broke "hidden md:inline-flex" on the header buttons earlier.
+			Two plain wrapper divs with their own hidden/flex, each holding
+			a differently-sized Button instance, sidesteps that entirely.
+			lg was too wide for two buttons to fit on one line below md
+			(they wrapped onto separate lines), so mobile gets sm instead;
+			the desktop pair (lg) is completely unchanged.
+		-->
+		<div class="mt-8 flex flex-wrap gap-3 md:hidden">
+			<Button href="/schedule" variant="primary" size="sm">{dict.home.heroCtaPrimary}</Button>
+			<Button href="/membership" variant="outline" size="sm">{dict.home.heroCtaSecondary}</Button>
+		</div>
+		<div class="mt-8 hidden flex-wrap gap-4 md:flex">
 			<Button href="/schedule" variant="primary" size="lg">{dict.home.heroCtaPrimary}</Button>
 			<Button href="/membership" variant="outline" size="lg">{dict.home.heroCtaSecondary}</Button>
 		</div>

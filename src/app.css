@@ -299,7 +299,7 @@
    principles marquee) as a bit of energy without introducing a new color. */
 @utility text-glow-primary {
 	text-shadow:
-		0 0 12px color-mix(in srgb, var(--brand-primary) 70%, transparent),
-		0 0 32px color-mix(in srgb, var(--brand-primary) 40%, transparent);
+		0 0 10.8px color-mix(in srgb, var(--brand-primary) 63%, transparent),
+		0 0 28.8px color-mix(in srgb, var(--brand-primary) 36%, transparent);
 }
 

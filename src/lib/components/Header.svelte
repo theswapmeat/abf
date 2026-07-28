@@ -109,16 +109,38 @@
 				(PreFooterCta.svelte, id="free-orientation") — that section
 				only exists on "/", so this always targets "/#free-orientation"
 				rather than a same-page hash, working correctly from any page.
-				animate-pulse-glow (app.css) is what sets this apart from Book
-				Classes — same primary fill, but a breathing glow ring so it
-				doesn't read as just a second identical button. Unconditional
-				(unlike Buy/Book Classes above) — always visible, every page,
-				every viewport, since nothing else duplicates it.
+				Unconditional (unlike Buy/Book Classes above) — always
+				visible, every page, every viewport, since nothing else
+				duplicates it.
+
+				The rotating gradient ring is a separate span BEHIND the
+				Button, not something baked into Button.svelte itself — it's
+				a one-off treatment for this single button, not a reusable
+				variant. It's skewed the same as the button (shape-lean) and
+				needs its OWN corner-overscan on top of that, same idea as
+				Button.svelte's shapeOverscan: at a ring height of 42px
+				(sm's 36px button + 3px reveal top and bottom), skewing it
+				shifts the top/bottom edges by 42/2*tan(10deg) ≈ 3.7px, so
+				-6.7px (3px reveal + 3.7px overscan) horizontally keeps the
+				ring's slanted edges from receding inside the button's own
+				corners the way a plain -3px-all-round inset did — which is
+				what made this look like a rectangle glowing behind a
+				parallelogram instead of an actual border tracing its shape.
+				The wrapper is inline-block so it shrink-wraps to the
+				Button's own rendered size; the ring is positioned first so
+				it paints behind the Button (later sibling) with no z-index
+				needed.
 			-->
-			<Button href="/#free-orientation" variant="primary" size="sm" class="animate-pulse-glow">
-				<span class="sm:hidden">{dict.nav.getFreeClassShort}</span>
-				<span class="hidden sm:inline">{dict.nav.getFreeClass}</span>
-			</Button>
+			<div class="relative inline-block">
+				<span
+					class="gradient-border-ring animate-gradient-spin shape-lean -inset-y-0.75 -left-[6.7px] -right-[6.7px]"
+					aria-hidden="true"
+				></span>
+				<Button href="/#free-orientation" variant="primary" size="sm">
+					<span class="sm:hidden">{dict.nav.getFreeClassShort}</span>
+					<span class="hidden sm:inline">{dict.nav.getFreeClass}</span>
+				</Button>
+			</div>
 
 			<!--
 				Three bars, no circle/border chrome. On hover the top bar nudges

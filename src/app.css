@@ -96,34 +96,51 @@
 		}
 	}
 
-	/*
-	 * Breathing glow ring — the header's "Get a Free Class" button is the
-	 * same solid-primary fill as Book Classes right next to it, so a static
-	 * style difference wasn't enough to set it apart; this is what actually
-	 * draws the eye without introducing a new color outside the brand's
-	 * yellow/white-on-ink palette.
-	 */
-	/*
-	 * Never dips to zero — a pulse that fades all the way out means roughly
-	 * half of every cycle looks identical to a plain button, which is exactly
-	 * why the first pass at this (0 -> 14px -> 0) still read as "the same" in
-	 * a still screenshot. This one oscillates between a already-strong glow
-	 * and a bigger one, plus a slight scale, so it's unmistakable in any
-	 * single frame, animated or not.
-	 */
-	--animate-pulse-glow: pulse-glow 1.6s ease-in-out infinite;
+}
 
-	@keyframes pulse-glow {
-		0%,
-		100% {
-			box-shadow: 0 0 6px 1px color-mix(in srgb, var(--brand-primary) 55%, transparent);
-			transform: scale(1);
-		}
-		50% {
-			box-shadow: 0 0 16px 4px color-mix(in srgb, var(--brand-primary) 70%, transparent);
-			transform: scale(1.02);
+/*
+ * Rotating gradient-border ring — the header's "Get a Free Class" button is
+ * the same solid-primary fill as Book Classes right next to it, so a static
+ * style difference wasn't enough to set it apart. This is a spinning ring of
+ * varying-opacity primary yellow behind the button (see the wrapper markup
+ * at its call site), not a static box-shadow pulse (the earlier version) —
+ * animating a CSS custom property is what makes a conic-gradient's rotation
+ * animate smoothly instead of snapping between angles; @property has to be
+ * declared at the top level (not inside @theme).
+ */
+@property --gradient-angle {
+	syntax: '<angle>';
+	initial-value: 0deg;
+	inherits: false;
+}
+
+@theme {
+	--animate-gradient-spin: gradient-spin 3s linear infinite;
+
+	@keyframes gradient-spin {
+		to {
+			--gradient-angle: 360deg;
 		}
 	}
+}
+
+/*
+ * No inset/transform baked in here on purpose — those have to be sized and
+ * skewed to match whatever specific button this sits behind (see the call
+ * site), so they're applied as separate classes there instead.
+ */
+@utility gradient-border-ring {
+	position: absolute;
+	filter: blur(1.5px);
+	background: conic-gradient(
+		from var(--gradient-angle),
+		color-mix(in srgb, var(--brand-primary) 15%, transparent),
+		color-mix(in srgb, var(--brand-primary) 100%, transparent) 25%,
+		var(--paper) 37.5%,
+		color-mix(in srgb, var(--brand-primary) 100%, transparent) 50%,
+		color-mix(in srgb, var(--brand-primary) 15%, transparent) 75%,
+		color-mix(in srgb, var(--brand-primary) 15%, transparent)
+	);
 }
 
 @layer base {
